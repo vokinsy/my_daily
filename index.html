@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="我的日常">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#3B82F6">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<title>我的日常</title>
+<style>
+:root{
+  --bg:#F7F7F8;--sf:#FFF;--sf2:#F3F3F5;--sf3:#EBEBED;
+  --bd:#E4E4E7;--bd2:#D4D4D8;--bdf:#3B82F6;
+  --t1:#18181B;--t2:#52525B;--t3:#A1A1AA;
+  --ac:#3B82F6;--acd:#EFF6FF;--acd2:#1D4ED8;
+  --gn:#16A34A;--gnd:#F0FDF4;
+  --am:#B45309;--amd:#FFFBEB;
+  --tl:#0F766E;--tld:#F0FDFA;
+  --pu:#7C3AED;--pud:#F5F3FF;
+  --rd:#DC2626;--rdd:#FEF2F2;
+  --r:8px;--r-l:12px;--r-xl:16px;
+  --s0:0 1px 2px rgba(0,0,0,.04);
+  --s1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --s2:0 4px 6px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04);
+  --s3:0 12px 28px rgba(0,0,0,.10),0 4px 8px rgba(0,0,0,.05);
+  --e:cubic-bezier(.4,0,.2,1);--ms:150ms;
+  --nh:58px;--sw:200px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0F0F11;--sf:#1C1C1F;--sf2:#27272A;--sf3:#3F3F46;
+  --bd:#27272A;--bd2:#3F3F46;
+  --t1:#FAFAFA;--t2:#A1A1AA;--t3:#52525B;
+  --ac:#60A5FA;--acd:#1E3A5F;--acd2:#93C5FD;
+  --gn:#4ADE80;--gnd:#14532D;
+  --am:#FCD34D;--amd:#451A03;
+  --tl:#2DD4BF;--tld:#042F2E;
+  --pu:#A78BFA;--pud:#2E1065;
+  --rd:#F87171;--rdd:#450A0A;
+}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{display:none}
+body{scrollbar-width:none;font-family:system-ui,-apple-system,'PingFang SC','Hiragino Sans GB',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
+input,textarea,select{font-family:inherit;-webkit-appearance:none}
+textarea{resize:none}
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden}
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--sf);border-right:1px solid var(--bd);display:flex;flex-direction:column;height:100%;overflow-y:auto}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:22px 18px 18px}
+.sb-mark{width:28px;height:28px;background:var(--ac);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.sb-name{font-size:14px;font-weight:600;color:var(--t1)}
+.sb-div{height:1px;background:var(--bd);margin:0 18px 8px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;font-weight:500;color:var(--t2);border-left:2px solid transparent;transition:all var(--ms) var(--e);cursor:pointer}
+.sb-item:hover{background:var(--sf2)}.sb-item:active{transform:scale(.98)}
+.sb-item.active{color:var(--ac);background:var(--acd);border-left-color:var(--ac)}
+.sb-item i{font-size:16px}.sb-sp{flex:1}.sb-ver{padding:12px 18px;font-size:11px;color:var(--t3)}
+@media(max-width:860px){.sidebar{display:none}}
+.main-col{flex:1;min-width:0;display:flex;flex-direction:column;height:100%;overflow:hidden}
+.main-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 16px;min-height:0}
+@media(max-width:860px){.main-scroll{padding:16px 14px 12px}}
+.bottom-nav{display:none;flex-shrink:0;background:var(--sf);border-top:1px solid var(--bd)}
+.bn-inner{display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:var(--t3);transition:color var(--ms) var(--e);cursor:pointer;padding:10px 0;-webkit-tap-highlight-color:transparent}
+.bn-item:active{transform:scale(.92)}.bn-item.active{color:var(--ac)}
+.bn-item i{font-size:20px}.bn-item span{font-weight:500}
+@media(max-width:860px){.bottom-nav{display:block}}
+.input-bar{flex-shrink:0;background:var(--sf);border-top:1px solid var(--bd);padding:9px 13px;padding-bottom:calc(9px + env(safe-area-inset-bottom,0px));position:relative}
+.page{display:none}.page.active{display:block}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-xl);padding:15px 17px;margin-bottom:11px;box-shadow:var(--s0)}
+.sec-title{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:11px;display:block}
+.row-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.pg-title{font-size:21px;font-weight:600;letter-spacing:-.4px;line-height:1.2;margin-bottom:2px}
+.pg-sub{font-size:12px;color:var(--t3)}.pg-hdr{margin-bottom:20px}
+.empty-state{text-align:center;padding:32px 0 24px;color:var(--t3)}
+.empty-state i{font-size:26px;display:block;margin-bottom:8px;opacity:.2}
+.es-title{font-size:13px;font-weight:500;color:var(--t2);margin-bottom:3px}
+.es-sub{font-size:12px;line-height:1.6;opacity:.7}
+.active-banner{background:linear-gradient(135deg,var(--acd2) 0%,var(--ac) 100%);border-radius:var(--r-xl);padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 14px rgba(59,130,246,.25);animation:bannerIn .3s var(--e) both}
+@keyframes bannerIn{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.banner-pulse{width:10px;height:10px;border-radius:50%;background:#fff;flex-shrink:0;animation:pulse 1.6s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.banner-body{flex:1;min-width:0}.banner-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px}
+.banner-task{font-size:14px;font-weight:600;color:#fff;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner-time{font-size:12px;color:rgba(255,255,255,.8);margin-top:1px}
+.banner-goto{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0}
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.stat-c{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-l);padding:11px 6px;text-align:center;box-shadow:var(--s0);cursor:pointer;transition:all var(--ms) var(--e)}
+.stat-c:hover{border-color:var(--bd2);box-shadow:var(--s1)}.stat-c:active{transform:scale(.97)}
+.stat-n{font-size:18px;font-weight:600;letter-spacing:-.5px;line-height:1}
+.stat-l{font-size:10px;color:var(--t3);margin-top:3px;font-weight:500}
+.tabs{display:flex;gap:4px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r-l);padding:4px;margin-bottom:18px}
+.tab{flex:1;padding:7px 4px;text-align:center;font-size:12px;font-weight:500;border-radius:var(--r);color:var(--t3);transition:all var(--ms) var(--e);white-space:nowrap}
+.tab.active{background:var(--sf);color:var(--t1);box-shadow:var(--s1)}.tab:active{transform:scale(.97)}
+.filters{display:flex;gap:4px}
+.f-btn{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;color:var(--t3);transition:all var(--ms) var(--e)}
+.f-btn:hover{background:var(--sf3);color:var(--t2)}.f-btn.active{background:var(--acd);color:var(--ac)}
+.timeline{padding-left:42px;position:relative;min-height:60px}
+.timeline::before{content:'';position:absolute;left:13px;top:8px;bottom:8px;width:1px;background:var(--bd)}
+.tl-grp{position:relative;margin-bottom:3px}
+.tl-hr{position:absolute;left:-42px;width:36px;text-align:right;font-size:10px;color:var(--t3);padding-top:11px;line-height:1}
+.tl-e{background:var(--sf);border:1px solid var(--bd);border-left:2.5px solid transparent;border-radius:var(--r-l);padding:9px 10px;margin-bottom:5px;display:flex;align-items:flex-start;gap:8px;position:relative;box-shadow:var(--s0);transition:transform var(--ms) var(--e),box-shadow var(--ms) var(--e),opacity var(--ms) var(--e)}
+.tl-e:hover{transform:translateY(-1px);box-shadow:var(--s2)}.tl-e.removing{opacity:0;transform:translateX(-8px)}
+.e-ic{width:27px;height:27px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
+.e-body{flex:1;min-width:0}.e-title{font-size:13px;font-weight:500;color:var(--t1);line-height:1.3}
+.e-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.e-right{display:flex;align-items:flex-start;gap:4px;flex-shrink:0;margin-top:2px}
+.e-time{font-size:11px;color:var(--t3)}
+.e-act{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);opacity:0;transition:all var(--ms) var(--e)}
+.tl-e:hover .e-act{opacity:.4}.e-act:hover{opacity:1!important}
+.e-act.edit:hover{background:var(--acd);color:var(--ac)}.e-act.del:hover{background:var(--rdd);color:var(--rd)}
+.done-btn{font-size:15px;color:var(--t3);padding:0 2px 0 0;transition:color var(--ms) var(--e)}
+.subtask-list{padding:5px 0 2px 4px;display:flex;flex-direction:column;gap:4px}
+.subtask-row{display:flex;align-items:center;gap:7px}
+.subtask-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all var(--ms) var(--e)}
+.subtask-check.done{background:var(--gn);border-color:var(--gn)}.subtask-check.done i{color:#fff;font-size:9px;display:block}.subtask-check i{display:none}
+.subtask-text{font-size:12px;color:var(--t2);flex:1}.subtask-text.done{text-decoration:line-through;color:var(--t3)}
+/* Calendar */
+.cal-page{display:flex;flex-direction:column;height:calc(100vh - var(--nh));height:calc(100dvh - var(--nh))}
+.cal-hdr{padding:14px 16px 10px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.cal-hdr-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cal-hdr-title{flex:1;font-size:16px;font-weight:600;color:var(--t1)}
+.cal-today-btn{padding:5px 12px;border-radius:var(--r);background:var(--acd);color:var(--ac);font-size:12px;font-weight:600}
+.cal-add-btn{width:32px;height:32px;border-radius:var(--r);background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.view-tabs{display:flex;gap:2px;background:var(--sf2);border-radius:var(--r);padding:3px}
+.v-tab{flex:1;padding:5px;text-align:center;font-size:12px;font-weight:500;border-radius:6px;color:var(--t3);cursor:pointer;transition:all var(--ms) var(--e)}
+.v-tab.active{background:var(--sf);color:var(--t1);box-shadow:var(--s1)}
+.week-strip{display:flex;align-items:center;gap:4px;padding:10px 12px 6px;flex-shrink:0}
+.ws-arrow{width:28px;height:28px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);flex-shrink:0;transition:background var(--ms) var(--e)}
+.ws-arrow:hover{background:var(--sf2);color:var(--t1)}
+.ws-days{flex:1;display:flex;gap:4px}
+.ws-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:var(--r);cursor:pointer;transition:background var(--ms) var(--e)}
+.ws-day:hover{background:var(--sf2)}.ws-day.active{background:var(--acd)}
+.ws-dow{font-size:10px;font-weight:500;color:var(--t3)}.ws-day.active .ws-dow{color:var(--ac)}
+.ws-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--t1)}
+.ws-day.today:not(.active) .ws-num{color:var(--ac);font-weight:700}.ws-day.active .ws-num{background:var(--ac);color:#fff}
+.ws-dot{width:4px;height:4px;border-radius:50%;background:var(--ac);opacity:0}.ws-day.has-ev .ws-dot{opacity:.5}.ws-day.active .ws-dot{opacity:0}
+.cal-content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.day-view{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.all-day-bar{border-bottom:1px solid var(--bd);padding:7px 12px;display:flex;gap:8px;align-items:flex-start;flex-shrink:0}
+.all-day-lbl{font-size:10px;color:var(--t3);font-weight:500;margin-top:3px;width:36px;flex-shrink:0;text-align:right}
+.all-day-chips{flex:1;display:flex;flex-wrap:wrap;gap:5px}
+.ad-chip{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer}
+.tl-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tl-body{display:flex;min-height:1440px}
+.t-col{width:46px;flex-shrink:0}
+.t-slot{height:60px;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:7px;padding-top:4px;font-size:10px;color:var(--t3)}
+.ev-col{flex:1;position:relative;border-left:1px solid var(--bd)}
+.hr-row{height:60px;border-bottom:1px solid var(--bd);position:relative;cursor:pointer}
+.hr-row:hover{background:rgba(59,130,246,.03)}.hr-row:last-child{border-bottom:none}
+.half-mark{position:absolute;top:50%;left:0;right:0;border-top:1px dashed var(--sf3)}
+.ev-block{position:absolute;left:3px;right:3px;border-radius:6px;padding:3px 7px;cursor:pointer;overflow:hidden;border-left:3px solid transparent}
+.ev-block:hover{opacity:.85}
+.ev-t{font-size:12px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-tl{font-size:10px;opacity:.7;margin-top:1px}
+.now-line{position:absolute;left:0;right:0;z-index:5;pointer-events:none;display:flex;align-items:center}
+.now-dot{width:8px;height:8px;border-radius:50%;background:var(--rd);flex-shrink:0;margin-left:-4px}
+.now-bar{flex:1;height:2px;background:var(--rd)}
+.month-view{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 12px}
+.month-wh{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.mwh{text-align:center;font-size:10px;font-weight:500;color:var(--t3);padding:3px 0}
+.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mg-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;border-radius:var(--r);cursor:pointer;transition:background var(--ms) var(--e)}
+.mg-cell:hover{background:var(--sf2)}
+.mg-num{font-size:12px;font-weight:500;color:var(--t1);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.mg-cell.today .mg-num{background:var(--ac);color:#fff}.mg-cell.sel:not(.today) .mg-num{background:var(--acd);color:var(--ac)}.mg-cell.oth .mg-num{color:var(--t3)}
+.mg-dots{display:flex;gap:2px;margin-top:2px}.mg-dot{width:4px;height:4px;border-radius:50%}
+.wk-view{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+.wk-hdr{display:flex;position:sticky;top:0;background:var(--sf);z-index:5;border-bottom:1px solid var(--bd)}
+.wk-tc{width:46px;flex-shrink:0}.wk-dcols{flex:1;display:grid;grid-template-columns:repeat(7,1fr)}
+.wk-dh{text-align:center;padding:6px 2px;cursor:pointer}
+.wk-dow{font-size:9px;color:var(--t3);font-weight:500}
+.wk-dnum{font-size:12px;font-weight:600;color:var(--t1);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.wk-dh.today .wk-dnum{background:var(--ac);color:#fff}
+.wk-body{display:flex}.wk-tc2{width:46px;flex-shrink:0}
+.wk-tlbl{height:48px;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:6px;padding-top:3px;font-size:9px;color:var(--t3)}
+.wk-cols{flex:1;display:grid;grid-template-columns:repeat(7,1fr)}
+.wk-col{border-left:1px solid var(--bd);position:relative}
+.wk-hour{height:48px;border-bottom:1px solid var(--bd);cursor:pointer}.wk-hour:hover{background:rgba(59,130,246,.03)}
+.wk-ev{position:absolute;left:1px;right:1px;border-radius:4px;padding:2px 4px;font-size:10px;font-weight:500;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;border-left:2px solid transparent}
+/* Timer */
+.timer-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-xl);padding:24px 20px 20px;margin-bottom:11px;box-shadow:var(--s1);text-align:center}
+.ring-wrap{position:relative;width:168px;height:168px;margin:0 auto 16px}
+.ring-svg{width:168px;height:168px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bd);stroke-width:5}.ring-prog{fill:none;stroke:var(--ac);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .5s var(--e),stroke var(--ms) var(--e)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t-num{font-size:36px;font-weight:300;letter-spacing:2px;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1}
+.t-mode-lbl{font-size:10px;font-weight:600;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
+.prog-bar-label{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:5px}
+.prog-bar-wrap{background:var(--sf2);border-radius:var(--r);height:6px;overflow:hidden;margin-bottom:16px}
+.prog-bar-fill{height:100%;border-radius:var(--r);transition:width .5s var(--e)}
+.t-ctrls{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:14px}
+.ct-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t3);border:1px solid var(--bd);background:var(--sf2);transition:all var(--ms) var(--e)}
+.ct-btn:active{transform:scale(.93)}
+.play-btn{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff;background:var(--ac);box-shadow:0 4px 14px rgba(59,130,246,.28);transition:all var(--ms) var(--e)}
+.play-btn:hover{background:var(--acd2);transform:scale(1.04)}.play-btn:active{transform:scale(.96)}
+.play-btn.paused{background:var(--sf);color:var(--ac);border:1.5px solid var(--ac);box-shadow:none}
+.t-status{font-size:12px;color:var(--t3);min-height:18px;transition:color var(--ms) var(--e)}.t-status.act{color:var(--ac)}
+.task-row{display:flex;align-items:center;gap:8px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r-l);padding:8px 12px;margin-top:13px;text-align:left;transition:border-color var(--ms) var(--e)}
+.task-row:focus-within{border-color:var(--bdf);box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+.task-row i{font-size:13px;color:var(--t3)}
+.task-inp{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--t1)}.task-inp::placeholder{color:var(--t3)}
+.time-row{display:flex;align-items:center;gap:8px;margin-top:8px;text-align:left}
+.time-lbl{font-size:12px;color:var(--t3)}
+.time-inp{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:5px 10px;font-size:12px;color:var(--t2);outline:none;width:92px}
+.time-inp:focus{border-color:var(--bdf)}
+.pomo-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.pomo-t{font-size:18px;transition:all .2s var(--e)}.pomo-t.dim{opacity:.15;filter:grayscale(1)}
+.sess-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--bd)}.sess-item:last-child{border-bottom:none}
+.sess-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.sess-task{font-size:13px;font-weight:500;color:var(--t1)}.sess-range{font-size:11px;color:var(--t3);margin-top:1px}.sess-min{font-size:12px;font-weight:500;color:var(--ac);flex-shrink:0}
+/* Stats */
+.custom-row{display:none;gap:8px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-l);padding:10px 12px;margin-bottom:13px}
+.custom-row.show{display:flex}.custom-row label{font-size:12px;color:var(--t3)}
+.d-inp{flex:1;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:6px 9px;font-size:12px;color:var(--t1);outline:none}
+.d-inp:focus{border-color:var(--bdf)}.q-btn{padding:6px 12px;background:var(--ac);color:#fff;border-radius:var(--r);font-size:12px;font-weight:500}
+.sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px}
+.sum-c{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-l);padding:11px 6px;text-align:center;box-shadow:var(--s0)}
+.sum-n{font-size:18px;font-weight:600;letter-spacing:-.5px;line-height:1}.sum-l{font-size:10px;color:var(--t3);margin-top:3px;font-weight:500}
+.bar-chart{display:flex;flex-direction:column;gap:6px}
+.bc-row{display:flex;align-items:center;gap:9px}
+.bc-lbl{font-size:11px;color:var(--t2);width:36px;text-align:right;flex-shrink:0}
+.bc-track{flex:1;height:19px;background:var(--sf2);border-radius:6px;overflow:hidden;position:relative}
+.bc-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:7px;transition:width .5s var(--e)}
+.bc-val{font-size:10px;font-weight:600;color:#fff}.bc-val-out{position:absolute;font-size:10px;font-weight:500;top:50%;right:-2px;translate:100% -50%}
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:5px}
+.hm-wh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}.hm-wd{text-align:center;font-size:9px;font-weight:500;color:var(--t3)}
+.hm-c{aspect-ratio:1;border-radius:3px;background:var(--sf2);transition:transform var(--ms) var(--e)}.hm-c:hover{transform:scale(1.2)}
+.hm-c.l1{background:#BFDBFE}.hm-c.l2{background:#93C5FD}.hm-c.l3{background:#60A5FA}.hm-c.l4{background:#3B82F6}
+.share-card{background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 52%,#60A5FA 100%);border-radius:var(--r-xl);padding:19px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
+.share-card::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.06)}
+.sc-p{font-size:10px;opacity:.6;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.sc-t{font-size:17px;font-weight:700;margin-bottom:13px;letter-spacing:-.3px}
+.sc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:12px}
+.sc-item{background:rgba(255,255,255,.12);border-radius:var(--r-l);padding:10px}
+.sc-n{font-size:20px;font-weight:700;letter-spacing:-.4px;line-height:1}.sc-l{font-size:10px;opacity:.7;margin-top:3px;font-weight:500}
+.sc-recent{border-top:1px solid rgba(255,255,255,.15);padding-top:9px}
+.sc-rt{font-size:10px;opacity:.55;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.sc-ri{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:12px;opacity:.85}
+.sc-rd{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);flex-shrink:0}
+.share-btn{width:100%;padding:9px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-l);font-size:13px;font-weight:500;color:var(--t2);display:flex;align-items:center;justify-content:center;gap:7px;transition:all var(--ms) var(--e);margin-bottom:11px;box-shadow:var(--s0)}
+.all-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd)}.all-item:last-child{border-bottom:none}
+.ai-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.ai-text{flex:1;font-size:13px;font-weight:500;color:var(--t1);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai-badge{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;flex-shrink:0}.ai-date{font-size:11px;color:var(--t3);flex-shrink:0}
+/* Input bar */
+.bar-row{display:flex;align-items:flex-end;gap:8px}
+.bar-plus{width:36px;height:36px;border-radius:50%;background:var(--sf2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--t2);flex-shrink:0;transition:all var(--ms) var(--e);position:relative;z-index:1}
+.bar-plus:active{transform:scale(.92)}.bar-plus.act{background:var(--ac);color:#fff;border-color:var(--ac)}
+.bar-pill{flex:1;display:flex;align-items:flex-end;background:var(--sf2);border:1px solid var(--bd);border-radius:20px;padding:0 10px;min-height:37px;transition:border-color var(--ms) var(--e),box-shadow var(--ms) var(--e)}
+.bar-pill:focus-within{border-color:var(--bdf);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.bar-ta{flex:1;background:transparent;border:none;outline:none;font-size:13.5px;color:var(--t1);padding:8px 0;max-height:80px;line-height:1.4}.bar-ta::placeholder{color:var(--t3)}
+.bar-send{width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-bottom:5px;opacity:0;pointer-events:none;transition:opacity var(--ms) var(--e)}.bar-send.show{opacity:1;pointer-events:all}
+.pm-bd{display:none;position:fixed;inset:0;z-index:10}.pm-bd.open{display:block}
+.pm-menu{position:absolute;bottom:100%;left:13px;width:210px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-xl);padding:6px;box-shadow:var(--s3);z-index:11;opacity:0;transform:translateY(8px) scale(.97);pointer-events:none;transition:opacity var(--ms) var(--e),transform var(--ms) var(--e);transform-origin:bottom left;margin-bottom:6px}
+.pm-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+.pm-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r);cursor:pointer;transition:background var(--ms) var(--e);font-size:13px;font-weight:500;color:var(--t1)}.pm-item:hover{background:var(--sf2)}.pm-item:active{transform:scale(.98)}
+.pm-ic{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+/* Modals */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:200;align-items:flex-end;justify-content:center}
+.modal-ov.open{display:flex}
+.modal-sheet{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-xl) var(--r-xl) 0 0;width:100%;max-width:480px;padding:17px 19px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));max-height:88vh;overflow-y:auto;box-shadow:var(--s3);animation:slideUp .15s var(--e) both}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.m-handle{width:32px;height:3px;border-radius:2px;background:var(--sf3);margin:0 auto 14px}
+.m-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:14px;letter-spacing:-.2px}
+.fg{margin-bottom:12px}.fl{font-size:12px;font-weight:500;color:var(--t2);display:block;margin-bottom:4px}
+.fi{width:100%;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:9px 11px;font-size:13px;color:var(--t1);outline:none;transition:border-color var(--ms) var(--e)}
+.fi:focus{border-color:var(--bdf);box-shadow:0 0 0 3px rgba(59,130,246,.08)}.fi::placeholder{color:var(--t3)}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-actions{display:flex;gap:8px;margin-top:5px}
+.btn-cancel{flex:1;padding:9px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--t2);transition:all var(--ms) var(--e)}
+.btn-primary{flex:1;padding:9px;background:var(--ac);border-radius:var(--r);font-size:13px;font-weight:500;color:#fff;transition:background var(--ms) var(--e)}.btn-primary:hover{background:var(--acd2)}
+.btn-danger{padding:9px 14px;background:var(--rdd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--rd)}
+.m-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.m-tag{padding:5px 11px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all var(--ms) var(--e)}.m-tag:active{transform:scale(.96)}.m-tag.sel{border-color:currentColor!important}
+.presets{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.preset{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;background:var(--sf2);border:1px solid var(--bd);color:var(--t2);cursor:pointer;transition:all var(--ms) var(--e)}.preset:active{transform:scale(.96)}
+.preset-section{margin-top:6px}.preset-lbl{font-size:11px;color:var(--t3);margin-bottom:5px;display:block}
+.subtask-inputs{display:flex;flex-direction:column;gap:6px;margin-top:5px}
+.subtask-fi{width:100%;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:7px 10px;font-size:12px;color:var(--t1);outline:none}.subtask-fi:focus{border-color:var(--bdf)}.subtask-fi::placeholder{color:var(--t3)}
+.install-bar{background:var(--acd);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-l);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.install-bar-text{flex:1;font-size:13px;color:var(--ac);font-weight:500}.install-bar-sub{font-size:11px;color:var(--t3);margin-top:1px}
+.install-btn{padding:6px 14px;background:var(--ac);color:#fff;border-radius:var(--r);font-size:12px;font-weight:600;flex-shrink:0}
+.install-close{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3)}
+.detail-list{max-height:55vh;overflow-y:auto}
+.detail-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--bd)}.detail-item:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="sb-logo"><div class="sb-mark">日</div><span class="sb-name">我的日常</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-item active" onclick="goPage('home')"><i class="ti ti-home"></i>今日</div>
+  <div class="sb-item" onclick="goPage('focus')"><i class="ti ti-clock"></i>专注</div>
+  <div class="sb-item" onclick="goPage('cal')"><i class="ti ti-calendar"></i>日历</div>
+  <div class="sb-item" onclick="goPage('stats')"><i class="ti ti-chart-bar"></i>统计</div>
+  <div class="sb-sp"></div><div class="sb-ver">v2.0 PWA</div>
+</aside>
+<div class="main-col">
+  <div class="main-scroll" id="ms">
+    <!-- HOME -->
+    <div class="page active" id="pg-home">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
+        <div><div class="pg-title" id="greeting">今天好</div><div class="pg-sub" id="subdate"></div></div>
+        <button style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);font-size:12px;font-weight:500;color:var(--t2)" onclick="goPage('cal')"><i class="ti ti-calendar"></i>日历</button>
+      </div>
+      <div id="install-prompt"></div>
+      <div id="active-banner" style="display:none"></div>
+      <div class="stats-strip">
+        <div class="stat-c" onclick="showStatDetail('focus')"><div class="stat-n" id="ss-f" style="color:var(--ac)">0</div><div class="stat-l">专注min</div></div>
+        <div class="stat-c" onclick="showStatDetail('done')"><div class="stat-n" id="ss-d" style="color:var(--gn)">0</div><div class="stat-l">完成项</div></div>
+        <div class="stat-c" onclick="showStatDetail('food')"><div class="stat-n" id="ss-m" style="color:var(--am)">0</div><div class="stat-l">餐次</div></div>
+        <div class="stat-c" onclick="showStatDetail('exercise')"><div class="stat-n" id="ss-e" style="color:var(--tl)">0</div><div class="stat-l">运动min</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span class="sec-title" style="margin:0">时间流</span>
+        <div class="filters"><button class="f-btn active" onclick="setTlF('all',this)">全部</button><button class="f-btn" onclick="setTlF('food',this)">饮食</button><button class="f-btn" onclick="setTlF('exercise',this)">运动</button></div>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+    <!-- FOCUS -->
+    <div class="page" id="pg-focus">
+      <div class="pg-hdr"><div class="pg-title">专注计时</div><div class="pg-sub">完成后自动写入时间流</div></div>
+      <div class="tabs"><button class="tab active" id="mt-pomo" onclick="setMode('pomo')">🍅 25'</button><button class="tab" id="mt-short" onclick="setMode('short')">休息 5'</button><button class="tab" id="mt-long" onclick="setMode('long')">长休 15'</button><button class="tab" id="mt-free" onclick="setMode('free')">自由</button></div>
+      <div class="timer-card">
+        <div class="ring-wrap"><svg class="ring-svg" viewBox="0 0 168 168"><circle class="ring-bg" cx="84" cy="84" r="74"/><circle class="ring-prog" id="ring" cx="84" cy="84" r="74" stroke-dasharray="464.96" stroke-dashoffset="0"/></svg><div class="ring-center"><div class="t-num" id="t-num">25:00</div><div class="t-mode-lbl" id="t-lbl">FOCUS</div></div></div>
+        <div class="prog-bar-label"><span id="pb-e">0 min</span><span id="pb-t">25 min</span></div>
+        <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:0%;background:var(--ac)"></div></div>
+        <div class="t-ctrls"><button class="ct-btn" onclick="resetTimer()"><i class="ti ti-refresh"></i></button><button class="play-btn" id="play-btn" onclick="toggleTimer()"><i class="ti ti-player-play" id="play-ic"></i></button><button class="ct-btn" onclick="skipTimer()"><i class="ti ti-player-skip-forward"></i></button></div>
+        <div class="t-status" id="t-status">点击开始专注</div>
+        <div class="task-row"><i class="ti ti-pencil"></i><input class="task-inp" id="task-inp" placeholder="正在专注于…（选填）"></div>
+        <div class="time-row"><span class="time-lbl">开始时间</span><input type="time" class="time-inp" id="fstart"></div>
+      </div>
+      <div class="card"><div class="row-hdr"><span class="sec-title" style="margin:0">今日番茄</span><span style="font-size:12px;color:var(--t3)" id="pomo-lbl">0 个</span></div><div class="pomo-row" id="pomo-row"></div></div>
+      <div class="card"><span class="sec-title">今日专注记录</span><div id="sess-list"></div></div>
+    </div>
+    <!-- CALENDAR -->
+    <div class="page" id="pg-cal" style="margin:-20px -16px 0;padding:0">
+      <div class="cal-page">
+        <div class="cal-hdr">
+          <div class="cal-hdr-top"><div class="cal-hdr-title" id="cal-hdr-title">日历</div><button class="cal-today-btn" onclick="calJumpToday()">今天</button><button class="cal-add-btn" onclick="openEvModal(null,null)"><i class="ti ti-plus"></i></button></div>
+          <div class="view-tabs"><div class="v-tab active" id="vt-day" onclick="setCalView('day')">日</div><div class="v-tab" id="vt-week" onclick="setCalView('week')">周</div><div class="v-tab" id="vt-month" onclick="setCalView('month')">月</div></div>
+        </div>
+        <div class="week-strip" id="week-strip">
+          <button class="ws-arrow" onclick="calShift(-1)"><i class="ti ti-chevron-left"></i></button>
+          <div class="ws-days" id="ws-days"></div>
+          <button class="ws-arrow" onclick="calShift(1)"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="cal-content" id="cal-content"></div>
+      </div>
+    </div>
+    <!-- STATS -->
+    <div class="page" id="pg-stats">
+      <div class="pg-hdr"><div class="pg-title">统计</div><div class="pg-sub" id="st-desc">今日数据</div></div>
+      <div class="tabs"><button class="tab active" id="pt-day" onclick="setPeriod('day')">今日</button><button class="tab" id="pt-week" onclick="setPeriod('week')">本周</button><button class="tab" id="pt-month" onclick="setPeriod('month')">本月</button><button class="tab" id="pt-custom" onclick="setPeriod('custom')">自定义</button></div>
+      <div class="custom-row" id="custom-row"><label>从</label><input type="date" class="d-inp" id="ds"><label>到</label><input type="date" class="d-inp" id="de"><button class="q-btn" onclick="renderStatsPage()">查询</button></div>
+      <div class="sum-row"><div class="sum-c"><div class="sum-n" id="su-f" style="color:var(--ac)">0</div><div class="sum-l">专注min</div></div><div class="sum-c"><div class="sum-n" id="su-d" style="color:var(--gn)">0</div><div class="sum-l">完成项</div></div><div class="sum-c"><div class="sum-n" id="su-m" style="color:var(--am)">0</div><div class="sum-l">餐次</div></div><div class="sum-c"><div class="sum-n" id="su-e" style="color:var(--tl)">0</div><div class="sum-l">运动min</div></div></div>
+      <div class="share-card"><div class="sc-p" id="sc-p">今日</div><div class="sc-t">完成统计 ✦</div><div class="sc-grid" id="sc-grid"></div><div class="sc-recent" id="sc-recent"></div></div>
+      <button class="share-btn" onclick="generateShareImage()"><i class="ti ti-download"></i>生成并下载分享图片</button>
+      <div class="card"><div class="row-hdr"><span class="sec-title" style="margin:0">专注时长</span><span style="font-size:11px;color:var(--t3)" id="fc-lbl"></span></div><div class="bar-chart" id="fc"></div></div>
+      <div class="card"><div class="row-hdr"><span class="sec-title" style="margin:0">运动时长</span><span style="font-size:11px;color:var(--t3)" id="ec-lbl"></span></div><div class="bar-chart" id="ec"></div></div>
+      <div class="card"><div class="row-hdr"><span class="sec-title" style="margin:0">热力图</span><span style="font-size:11px;color:var(--t3)">近28天</span></div><div class="hm-wh"><div class="hm-wd">日</div><div class="hm-wd">一</div><div class="hm-wd">二</div><div class="hm-wd">三</div><div class="hm-wd">四</div><div class="hm-wd">五</div><div class="hm-wd">六</div></div><div class="heatmap" id="heatmap"></div><div style="display:flex;align-items:center;gap:4px;margin-top:6px;justify-content:flex-end"><span style="font-size:10px;color:var(--t3)">少</span><div style="width:10px;height:10px;border-radius:2px;background:var(--sf2)"></div><div style="width:10px;height:10px;border-radius:2px;background:#BFDBFE"></div><div style="width:10px;height:10px;border-radius:2px;background:#93C5FD"></div><div style="width:10px;height:10px;border-radius:2px;background:#60A5FA"></div><div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div><span style="font-size:10px;color:var(--t3)">多</span></div></div>
+      <div class="card"><div class="row-hdr"><span class="sec-title" style="margin:0">全部事项</span><span style="font-size:11px;color:var(--t3)" id="ai-lbl"></span></div><div id="all-items"></div></div>
+      <div class="card"><span class="sec-title">数据管理</span><div style="display:flex;gap:8px"><button class="btn-cancel" style="flex:1;padding:9px;font-size:12px" onclick="exportData()"><i class="ti ti-download" style="margin-right:5px"></i>导出备份</button><label class="btn-cancel" style="flex:1;padding:9px;font-size:12px;text-align:center;cursor:pointer"><i class="ti ti-upload" style="margin-right:5px"></i>恢复数据<input type="file" accept=".json" style="display:none" onchange="importData(this)"></label></div></div>
+    </div>
+  </div>
+  <!-- INPUT BAR -->
+  <div class="input-bar" id="input-bar">
+    <div class="pm-bd" id="pm-bd" onclick="closePM()"></div>
+    <div class="pm-menu" id="pm-menu">
+      <div class="pm-item" onclick="openRecModal('food')"><div class="pm-ic" style="background:var(--amd);color:var(--am)"><i class="ti ti-salad"></i></div>记饮食</div>
+      <div class="pm-item" onclick="openRecModal('exercise')"><div class="pm-ic" style="background:var(--tld);color:var(--tl)"><i class="ti ti-run"></i></div>记运动</div>
+      <div class="pm-item" onclick="openRecModal('sched')"><div class="pm-ic" style="background:var(--acd);color:var(--ac)"><i class="ti ti-calendar-plus"></i></div>添加日程</div>
+    </div>
+    <div class="bar-row"><button class="bar-plus" id="bar-plus" onclick="togglePM()"><i class="ti ti-plus" id="plus-ic"></i></button><div class="bar-pill"><textarea class="bar-ta" id="bar-ta" rows="1" placeholder="随手记…" oninput="onBarInput()" onkeydown="onBarKey(event)"></textarea><button class="bar-send" id="bar-send" onclick="submitLog()"><i class="ti ti-arrow-up"></i></button></div></div>
+  </div>
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav"><div class="bn-inner">
+    <div class="bn-item active" onclick="goPage('home')"><i class="ti ti-home"></i><span>今日</span></div>
+    <div class="bn-item" onclick="goPage('focus')"><i class="ti ti-clock"></i><span>专注</span></div>
+    <div class="bn-item" onclick="goPage('cal')"><i class="ti ti-calendar"></i><span>日历</span></div>
+    <div class="bn-item" onclick="goPage('stats')"><i class="ti ti-chart-bar"></i><span>统计</span></div>
+  </div></nav>
+</div>
+</div>
+<!-- EV EDIT MODAL -->
+<div class="modal-ov" id="ev-modal" onclick="if(event.target===this)closeEvModal()">
+  <div class="modal-sheet">
+    <div class="m-handle"></div><div class="m-title" id="ev-m-title">添加事项</div>
+    <div class="fg"><label class="fl">标题</label><input class="fi" id="ev-title" placeholder="事项名称…"></div>
+    <div class="fr2"><div class="fg"><label class="fl">日期</label><input type="date" class="fi" id="ev-date"></div><div class="fg"><label class="fl">全天</label><select class="fi" id="ev-allday" onchange="togEvTime()"><option value="1">是</option><option value="0">否</option></select></div></div>
+    <div id="ev-time-wrap" style="display:none"><div class="fr2"><div class="fg"><label class="fl">开始</label><input type="time" class="fi" id="ev-start"></div><div class="fg"><label class="fl">结束</label><input type="time" class="fi" id="ev-end"></div></div></div>
+    <div class="fg"><label class="fl">类型</label><div class="m-tags" id="ev-type-tags"></div></div>
+    <div class="fg"><label class="fl">备注</label><input class="fi" id="ev-note" placeholder="备注…"></div>
+    <div class="fg" id="ev-sub-wrap"><label class="fl">子清单（最多3条）</label><div class="subtask-inputs"><input class="subtask-fi" id="sub-0" placeholder="子任务 1…"><input class="subtask-fi" id="sub-1" placeholder="子任务 2…"><input class="subtask-fi" id="sub-2" placeholder="子任务 3…"></div></div>
+    <div class="m-actions" id="ev-m-actions"></div>
+  </div>
+</div>
+<!-- REC MODAL -->
+<div class="modal-ov" id="rec-modal" onclick="if(event.target===this)closeRecModal()">
+  <div class="modal-sheet">
+    <div class="m-handle"></div><div class="m-title" id="rec-m-title"></div>
+    <div id="rec-m-body"></div>
+    <div class="m-actions"><button class="btn-cancel" onclick="closeRecModal()">取消</button><button class="btn-primary" id="rec-save-btn">保存</button></div>
+  </div>
+</div>
+<!-- STAT DETAIL MODAL -->
+<div class="modal-ov" id="stat-modal" onclick="if(event.target===this)document.getElementById('stat-modal').classList.remove('open')">
+  <div class="modal-sheet">
+    <div class="m-handle"></div><div class="m-title" id="stat-m-title"></div>
+    <div class="detail-list" id="stat-m-list"></div>
+  </div>
+</div>
+<script>
+/* STATE */
+let D={ents:[],scheds:[],focusSessions:[]};
+let tlF='all',pmOpen=false,curPage='home',deferredPrompt=null;
+let cMeal='早餐',cInt='轻松',cEvType='task',statPeriod='day';
+let tMode='pomo',tSec=1500,tOrig=1500,tRun=false,tInt=null;
+let calView='day',calDate=new Date(),editEvId=null,editEvSrc=null,calEvType='task';
+const CIRC=2*Math.PI*74;
+const MODES={pomo:1500,short:300,long:900,free:0};
+const MODE_LBL={pomo:'FOCUS',short:'BREAK',long:'LONG BREAK',free:'FREE'};
+const PAGES=['home','focus','cal','stats'];
+const TC={log:{l:'随手记',c:'#7C3AED',bg:'#F5F3FF',ic:'ti-pencil'},food:{l:'饮食',c:'#B45309',bg:'#FFFBEB',ic:'ti-salad'},exercise:{l:'运动',c:'#0F766E',bg:'#F0FDFA',ic:'ti-run'},focus:{l:'专注',c:'#3B82F6',bg:'#EFF6FF',ic:'ti-clock'},task:{l:'任务',c:'#16A34A',bg:'#F0FDF4',ic:'ti-check'},study:{l:'学习',c:'#3B82F6',bg:'#EFF6FF',ic:'ti-book'}};
+const FOOD_PRESETS={早餐:['燕麦粥','全麦吐司','鸡蛋','牛奶','豆浆','水果'],午餐:['米饭+菜','外卖','沙拉','面条','便当'],晚餐:['轻食','米饭+菜','汤','面'],加餐:['坚果','酸奶','水果','饼干']};
+const EXER_PRESETS=['散步20min','跑步30min','HIIT20min','瑜伽30min','骑车30min','游泳','力量训练'];
+const TODAY=()=>new Date().toISOString().slice(0,10);
+const pad=n=>String(n).padStart(2,'0');
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ntime=()=>{const n=new Date();return pad(n.getHours())+':'+pad(n.getMinutes());};
+const dStr=d=>d.toISOString().slice(0,10);
+const addD=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
+const wkStart=d=>{const r=new Date(d);r.setDate(r.getDate()-r.getDay());return r;};
+/* Storage */
+function loadD(){try{const r=localStorage.getItem('daily-v6');if(r)D=JSON.parse(r);}catch(e){}if(!D.focusSessions)D.focusSessions=[];if(!D.scheds)D.scheds=[];if(!D.ents)D.ents=[];}
+function saveD(){try{localStorage.setItem('daily-v6',JSON.stringify(D));}catch(e){}}
+/* PWA */
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('install-prompt').innerHTML=`<div class="install-bar"><div><div class="install-bar-text">安装到主屏幕</div><div class="install-bar-sub">像 App 一样使用，支持离线</div></div><button class="install-btn" onclick="installPWA()">安装</button><button class="install-close" onclick="document.getElementById('install-prompt').innerHTML=''"><i class="ti ti-x"></i></button></div>`;});
+function installPWA(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('install-prompt').innerHTML='';});}
+window.addEventListener('appinstalled',()=>{document.getElementById('install-prompt').innerHTML='';});
+if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});
+/* Init */
+function init(){loadD();document.getElementById('fstart').value=ntime();document.getElementById('ds').value=TODAY();document.getElementById('de').value=TODAY();updateAll();}
+function updateAll(){requestAnimationFrame(()=>{renderHeader();if(curPage==='home'){renderHomeStats();renderTimeline();renderBanner();}if(curPage==='focus'){renderPomoRow();renderSessions();}if(curPage==='cal'){renderCalendar();}if(curPage==='stats'){renderHomeStats();renderStatsPage();}});}
+function renderHeader(){const h=new Date().getHours();document.getElementById('greeting').textContent=(h<6?'夜深了':h<11?'早上好':h<14?'中午好':h<18?'下午好':'晚上好')+' ✦';document.getElementById('subdate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
+function renderBanner(){const el=document.getElementById('active-banner');if(!tRun){el.style.display='none';return;}const task=document.getElementById('task-inp').value.trim()||'专注中';const elapsed=tOrig>0?Math.floor((tOrig-tSec)/60):Math.floor(tSec/60);el.style.display='block';el.innerHTML=`<div class="active-banner"><div class="banner-pulse"></div><div class="banner-body"><div class="banner-label">进行中 · ${MODE_LBL[tMode]}</div><div class="banner-task">${esc(task)}</div><div class="banner-time">${elapsed} / ${Math.floor(tOrig/60)} 分钟</div></div><button class="banner-goto" onclick="goPage('focus')"><i class="ti ti-arrow-right"></i></button></div>`;}
+function renderHomeStats(){const t=TODAY();const fm=D.ents.filter(e=>e.date===t&&e.type==='focus').reduce((a,e)=>a+(e.min||0),0);const dn=D.ents.filter(e=>e.date===t&&e.type==='log').length+D.scheds.filter(s=>s.date===t&&s.done).length;const ml=D.ents.filter(e=>e.date===t&&e.type==='food').length;const ex=D.ents.filter(e=>e.date===t&&e.type==='exercise').reduce((a,e)=>a+(parseInt(e.dur)||0),0);[['ss-f',fm],['ss-d',dn],['ss-m',ml],['ss-e',ex]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});}
+/* Stat detail */
+function showStatDetail(type){const t=TODAY();let items=[],title='';if(type==='focus'){title='今日专注';items=D.ents.filter(e=>e.date===t&&e.type==='focus');}else if(type==='done'){title='今日完成';items=[...D.ents.filter(e=>e.date===t&&e.type==='log'),...D.scheds.filter(s=>s.date===t&&s.done).map(s=>({...s,text:s.title}))];}else if(type==='food'){title='今日饮食';items=D.ents.filter(e=>e.date===t&&e.type==='food');}else if(type==='exercise'){title='今日运动';items=D.ents.filter(e=>e.date===t&&e.type==='exercise');}document.getElementById('stat-m-title').textContent=title;const listEl=document.getElementById('stat-m-list');if(!items.length){listEl.innerHTML=`<div class="empty-state" style="padding:16px 0"><i class="ti ti-list"></i><div class="es-sub">今日暂无记录</div></div>`;}else{listEl.innerHTML=items.map(item=>{const tc=TC[item.type]||TC.log;let meta='';if(item.type==='food')meta=(item.meal||'')+(item.cal?` · ${item.cal}kcal`:'');else if(item.type==='exercise')meta=`${item.dur||0}分钟${item.intensity?' · '+item.intensity:''}`;else if(item.type==='focus')meta=`${item.min||0}分钟${item.endTime?` (${item.time}–${item.endTime})`:''}`;return`<div class="detail-item"><div class="e-ic" style="background:${tc.bg};color:${tc.c};width:26px;height:26px;font-size:13px"><i class="ti ${tc.ic}"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500">${esc(item.text||item.title||'')}</div>${meta?`<div style="font-size:11px;color:var(--t3);margin-top:2px">${meta}</div>`:''}</div><span style="font-size:11px;color:var(--t3)">${item.time||''}</span></div>`;}).join('');}document.getElementById('stat-modal').classList.add('open');}
+/* Timeline */
+function renderTimeline(){const t=TODAY();let items=[...D.ents.filter(e=>e.date===t),...D.scheds.filter(s=>s.date===t).map(s=>({...s,_s:true}))];if(tlF==='food')items=items.filter(i=>i.type==='food');if(tlF==='exercise')items=items.filter(i=>i.type==='exercise');items.sort((a,b)=>(a.time||'00:00')<=(b.time||'00:00')?-1:1);const el=document.getElementById('timeline');if(!items.length){el.innerHTML=`<div class="empty-state"><i class="ti ti-sun-low"></i><div class="es-title">今天还没有记录</div><div class="es-sub">从底部输入框开始</div></div>`;return;}const grps={};items.forEach(i=>{const h=(i.time||'--').split(':')[0];if(!grps[h])grps[h]=[];grps[h].push(i);});let html='';Object.keys(grps).sort().forEach(h=>{html+=`<div class="tl-grp">`;if(h!=='--')html+=`<div class="tl-hr">${h}:00</div>`;grps[h].forEach(item=>{const tc=TC[item.type]||TC.log;const done=item._s&&item.done;let meta='';if(item.type==='food')meta=(item.meal||'')+(item.cal?` · ${item.cal} kcal`:'');else if(item.type==='exercise')meta=`${item.dur||0}分钟${item.intensity?' · '+item.intensity:''}`;else if(item.type==='focus')meta=`${item.min||0}分钟${item.endTime?` (${item.time}–${item.endTime})`:''}`;else if(item._s&&item.note)meta=item.note;let subHtml='';if(item._s&&item.subtasks&&item.subtasks.length){subHtml=`<div class="subtask-list">${item.subtasks.map((st,si)=>`<div class="subtask-row"><div class="subtask-check${st.done?' done':''}" onclick="togSub(${item.id},${si})"><i class="ti ti-check"></i></div><span class="subtask-text${st.done?' done':''}">${esc(st.text)}</span></div>`).join('')}</div>`;}const chk=item._s?`<button class="done-btn" onclick="togDone(${item.id})" style="color:${done?'var(--gn)':'var(--t3)'}"><i class="ti ti-${done?'circle-check':'circle'}"></i></button>`:'';const editBtn=(item._s||item.type==='log'||item.type==='food'||item.type==='exercise')?`<button class="e-act edit" onclick="openEvModal(${item.id},'${item._s?'sched':'ent'}')"><i class="ti ti-pencil"></i></button>`:'';const del=item._s?`<button class="e-act del" onclick="delItem('sched',${item.id})"><i class="ti ti-x"></i></button>`:`<button class="e-act del" onclick="delItem('ent',${item.id})"><i class="ti ti-x"></i></button>`;html+=`<div class="tl-e" id="tl-e-${item.id}" style="border-left-color:${tc.c};${done?'opacity:.45':''}"><div class="e-ic" style="background:${tc.bg};color:${tc.c}"><i class="ti ${tc.ic}"></i></div><div class="e-body"><div class="e-title" style="${done?'text-decoration:line-through;color:var(--t3)':''}">${esc(item.text||item.title||'')}</div>${meta?`<div class="e-meta">${esc(meta)}</div>`:''}${subHtml}</div><div class="e-right">${chk}${editBtn}<span class="e-time">${item.time||''}</span>${del}</div></div>`;});html+=`</div>`;});el.innerHTML=html;}
+function setTlF(f,btn){tlF=f;document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTimeline();}
+function delItem(type,id){const el=document.getElementById(`tl-e-${id}`);if(el){el.classList.add('removing');setTimeout(()=>_del(type,id),160);}else _del(type,id);}
+function _del(type,id){if(type==='ent')D.ents=D.ents.filter(e=>e.id!==id);else D.scheds=D.scheds.filter(s=>s.id!==id);saveD();renderTimeline();renderHomeStats();}
+function togDone(id){const s=D.scheds.find(x=>x.id===id);if(s)s.done=!s.done;saveD();renderTimeline();renderHomeStats();}
+function togSub(sid,si){const s=D.scheds.find(x=>x.id===sid);if(s&&s.subtasks&&s.subtasks[si])s.subtasks[si].done=!s.subtasks[si].done;saveD();renderTimeline();}
+/* Ev edit modal */
+function buildEvTypeTags(sel){const types=[{k:'task',l:'任务',c:'var(--gn)',bg:'var(--gnd)'},{k:'study',l:'学习',c:'var(--ac)',bg:'var(--acd)'},{k:'exercise',l:'运动',c:'var(--tl)',bg:'var(--tld)'},{k:'food',l:'饮食',c:'var(--am)',bg:'var(--amd)'},{k:'log',l:'随手记',c:'var(--pu)',bg:'var(--pud)'}];calEvType=sel||'task';document.getElementById('ev-type-tags').innerHTML=types.map(t=>`<button class="m-tag${t.k===calEvType?' sel':''}" style="background:${t.bg};color:${t.c}" data-k="${t.k}" onclick="pickEvType(this,'${t.k}')">${t.l}</button>`).join('');}
+function pickEvType(btn,k){calEvType=k;document.querySelectorAll('#ev-type-tags .m-tag').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
+function togEvTime(){const ad=document.getElementById('ev-allday').value==='1';document.getElementById('ev-time-wrap').style.display=ad?'none':'block';}
+function openEvModal(id,src){
+  editEvId=id;editEvSrc=src;
+  let item=null;
+  if(id&&src==='sched')item=D.scheds.find(s=>s.id===id);
+  else if(id&&src==='ent')item=D.ents.find(e=>e.id===id);
+  document.getElementById('ev-m-title').textContent=item?'编辑事项':'添加日程';
+  document.getElementById('ev-title').value=item?(item.title||item.text||''):'';
+  document.getElementById('ev-date').value=item?item.date:dStr(calDate);
+  const hasT=item?!!item.time:false;
+  document.getElementById('ev-allday').value=hasT?'0':'1';
+  document.getElementById('ev-start').value=item?(item.time||''):'';
+  document.getElementById('ev-end').value=item?(item.endTime||item.end||''):'';
+  document.getElementById('ev-note').value=item?(item.note||''):'';
+  togEvTime();buildEvTypeTags(item?(item.type||'task'):'task');
+  document.getElementById('ev-sub-wrap').style.display=(src==='ent')?'none':'block';
+  if(src!=='ent'){[0,1,2].forEach(i=>{const f=document.getElementById('sub-'+i);if(f)f.value=item&&item.subtasks&&item.subtasks[i]?item.subtasks[i].text:'';});}
+  const acts=document.getElementById('ev-m-actions');
+  acts.innerHTML=item?`<button class="btn-danger" onclick="deleteEv()"><i class="ti ti-trash"></i></button><button class="btn-cancel" onclick="closeEvModal()">取消</button><button class="btn-primary" onclick="saveEv()">保存</button>`:`<button class="btn-cancel" onclick="closeEvModal()">取消</button><button class="btn-primary" onclick="saveEv()">保存</button>`;
+  document.getElementById('ev-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('ev-title').focus(),180);
+}
+function closeEvModal(){document.getElementById('ev-modal').classList.remove('open');editEvId=null;editEvSrc=null;}
+function saveEv(){const title=document.getElementById('ev-title').value.trim();if(!title)return;const date=document.getElementById('ev-date').value;if(!date)return;const allDay=document.getElementById('ev-allday').value==='1';const start=document.getElementById('ev-start').value;const end=document.getElementById('ev-end').value;const note=document.getElementById('ev-note').value.trim();if(editEvId){if(editEvSrc==='sched'){const s=D.scheds.find(x=>x.id===editEvId);if(s){s.title=title;s.date=date;s.time=allDay?'':start;s.end=end;s.note=note;s.type=calEvType;}}else if(editEvSrc==='ent'){const e=D.ents.find(x=>x.id===editEvId);if(e){e.text=title;e.date=date;e.time=allDay?'':start;e.endTime=end;e.type=calEvType;}}}else{const subtasks=[];[0,1,2].forEach(i=>{const f=document.getElementById('sub-'+i);if(f&&f.value.trim())subtasks.push({text:f.value.trim(),done:false});});D.scheds.push({id:Date.now(),type:calEvType,title,date,time:allDay?'':start,end,note,done:false,subtasks});}saveD();closeEvModal();renderTimeline();renderHomeStats();if(curPage==='cal')renderCalendar();}
+function deleteEv(){if(!editEvId)return;if(!confirm('确定删除？'))return;if(editEvSrc==='sched')D.scheds=D.scheds.filter(s=>s.id!==editEvId);else D.ents=D.ents.filter(e=>e.id!==editEvId);saveD();closeEvModal();renderTimeline();renderHomeStats();if(curPage==='cal')renderCalendar();}
+/* Rec modal */
+const REC={
+  food:{t:'记录饮食',r:()=>`<div class="fg"><label class="fl">餐次</label><div class="m-tags">${['早餐','午餐','晚餐','加餐'].map(m=>`<button class="m-tag${m===cMeal?' sel':''}" style="background:var(--amd);color:var(--am)" data-v="${m}" onclick="pickMTag(this,'meal')">${m}</button>`).join('')}</div></div><div class="fg"><label class="fl">食物内容</label><input class="fi" id="f-con" placeholder="吃了什么…"><div class="preset-section"><span class="preset-lbl">常用预设</span><div class="presets" id="food-presets"></div></div></div><div class="fr2"><div class="fg"><label class="fl">热量（kcal，选填）</label><input type="number" class="fi" id="f-cal" placeholder="450"></div><div class="fg"><label class="fl">时间</label><input type="time" class="fi" id="f-time"></div></div>`,a:()=>{document.getElementById('f-time').value=ntime();rFoodPresets();setTimeout(()=>document.getElementById('f-con').focus(),180);},s:saveFood},
+  exercise:{t:'记录运动',r:()=>`<div class="fg"><label class="fl">运动项目</label><input class="fi" id="e-name" placeholder="跑步、散步、HIIT…"><div class="preset-section"><span class="preset-lbl">快速选择</span><div class="presets">${EXER_PRESETS.map(p=>`<button class="preset" onclick="fillExer('${p}')">${p}</button>`).join('')}</div></div></div><div class="fr2"><div class="fg"><label class="fl">时长（分钟）</label><input type="number" class="fi" id="e-dur" placeholder="30"></div><div class="fg"><label class="fl">时间</label><input type="time" class="fi" id="e-time"></div></div><div class="fg"><label class="fl">强度</label><div class="m-tags">${[{k:'轻松',c:'var(--gn)',bg:'var(--gnd)'},{k:'中等',c:'var(--am)',bg:'var(--amd)'},{k:'较累',c:'var(--rd)',bg:'var(--rdd)'}].map(it=>`<button class="m-tag${it.k===cInt?' sel':''}" style="background:${it.bg};color:${it.c}" data-v="${it.k}" onclick="pickMTag(this,'int')">${it.k}</button>`).join('')}</div></div>`,a:()=>{document.getElementById('e-time').value=ntime();setTimeout(()=>document.getElementById('e-name').focus(),180);},s:saveExercise},
+  sched:{t:'添加日程',r:()=>`<div class="fg"><label class="fl">标题</label><input class="fi" id="s-title" placeholder="事项名称…"></div><div class="fr2"><div class="fg"><label class="fl">日期</label><input type="date" class="fi" id="s-date"></div><div class="fg"><label class="fl">时间（选填）</label><input type="time" class="fi" id="s-time"></div></div><div class="fg"><label class="fl">类型</label><div class="m-tags">${[{k:'task',l:'任务',c:'var(--gn)',bg:'var(--gnd)'},{k:'study',l:'学习',c:'var(--ac)',bg:'var(--acd)'},{k:'exercise',l:'运动',c:'var(--tl)',bg:'var(--tld)'},{k:'food',l:'饮食',c:'var(--am)',bg:'var(--amd)'}].map(it=>`<button class="m-tag${it.k===cEvType?' sel':''}" style="background:${it.bg};color:${it.c}" data-v="${it.k}" onclick="pickMTag(this,'evtype')">${it.l}</button>`).join('')}</div></div><div class="fg"><label class="fl">备注</label><input class="fi" id="s-note" placeholder="附加说明…"></div><div class="fg"><label class="fl">子清单（最多3条）</label><div class="subtask-inputs"><input class="subtask-fi" id="rs-0" placeholder="子任务 1…"><input class="subtask-fi" id="rs-1" placeholder="子任务 2…"><input class="subtask-fi" id="rs-2" placeholder="子任务 3…"></div></div>`,a:()=>{document.getElementById('s-date').value=TODAY();setTimeout(()=>document.getElementById('s-title').focus(),180);},s:saveRecSched},
+};
+function openRecModal(type){closePM();const cfg=REC[type];document.getElementById('rec-m-title').textContent=cfg.t;document.getElementById('rec-m-body').innerHTML=cfg.r();document.getElementById('rec-save-btn').onclick=cfg.s;document.getElementById('rec-modal').classList.add('open');if(cfg.a)cfg.a();}
+function closeRecModal(){document.getElementById('rec-modal').classList.remove('open');}
+function pickMTag(btn,type){const p=btn.closest('.m-tags');p.querySelectorAll('.m-tag').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');const v=btn.dataset.v;if(type==='meal'){cMeal=v;rFoodPresets();}if(type==='int')cInt=v;if(type==='evtype')cEvType=v;}
+function rFoodPresets(){const el=document.getElementById('food-presets');if(!el)return;el.innerHTML=(FOOD_PRESETS[cMeal]||[]).map(p=>`<button class="preset" onclick="document.getElementById('f-con').value='${p}'">${p}</button>`).join('');}
+function fillExer(p){const n=document.getElementById('e-name');const d=document.getElementById('e-dur');if(!n)return;const m=p.match(/(\d+)min/);n.value=p.replace(/\d+min/,'').trim();if(m&&d)d.value=m[1];}
+function saveFood(){const c=document.getElementById('f-con').value.trim();if(!c){document.getElementById('f-con').focus();return;}D.ents.push({id:Date.now(),type:'food',text:c,meal:cMeal,cal:parseInt(document.getElementById('f-cal').value)||0,date:TODAY(),time:document.getElementById('f-time').value||ntime()});document.getElementById('f-con').value='';document.getElementById('f-cal').value='';closeRecModal();saveD();renderTimeline();renderHomeStats();}
+function saveExercise(){const n=document.getElementById('e-name').value.trim();const d=document.getElementById('e-dur').value;if(!n){document.getElementById('e-name').focus();return;}if(!d){document.getElementById('e-dur').focus();return;}D.ents.push({id:Date.now(),type:'exercise',text:n,dur:parseInt(d),intensity:cInt,date:TODAY(),time:document.getElementById('e-time').value||ntime()});document.getElementById('e-name').value='';document.getElementById('e-dur').value='';closeRecModal();saveD();renderTimeline();renderHomeStats();}
+function saveRecSched(){const t=document.getElementById('s-title').value.trim();const dt=document.getElementById('s-date').value;if(!t){document.getElementById('s-title').focus();return;}if(!dt)return;const subtasks=[];[0,1,2].forEach(i=>{const f=document.getElementById('rs-'+i);if(f&&f.value.trim())subtasks.push({text:f.value.trim(),done:false});});D.scheds.push({id:Date.now(),type:cEvType,title:t,date:dt,time:document.getElementById('s-time').value,note:document.getElementById('s-note').value.trim(),done:false,subtasks});closeRecModal();saveD();renderTimeline();renderHomeStats();}
+/* Bar */
+function togglePM(){pmOpen=!pmOpen;document.getElementById('pm-menu').classList.toggle('open',pmOpen);document.getElementById('pm-bd').classList.toggle('open',pmOpen);document.getElementById('bar-plus').classList.toggle('act',pmOpen);document.getElementById('plus-ic').className=pmOpen?'ti ti-x':'ti ti-plus';}
+function closePM(){pmOpen=false;document.getElementById('pm-menu').classList.remove('open');document.getElementById('pm-bd').classList.remove('open');document.getElementById('bar-plus').classList.remove('act');document.getElementById('plus-ic').className='ti ti-plus';}
+function onBarInput(){const v=document.getElementById('bar-ta').value.trim();document.getElementById('bar-send').classList.toggle('show',v.length>0);const el=document.getElementById('bar-ta');el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+function onBarKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitLog();}}
+function submitLog(){const v=document.getElementById('bar-ta').value.trim();if(!v)return;D.ents.unshift({id:Date.now(),type:'log',text:v,date:TODAY(),time:ntime()});document.getElementById('bar-ta').value='';document.getElementById('bar-ta').style.height='auto';document.getElementById('bar-send').classList.remove('show');saveD();renderTimeline();renderHomeStats();}
+/* Calendar */
+function getAllCalEvs(){const evs=[];D.scheds.forEach(s=>evs.push({id:s.id,src:'sched',type:s.type||'task',title:s.title,date:s.date,start:s.time||'',end:s.end||'',allDay:!s.time,note:s.note||'',done:s.done}));D.ents.forEach(e=>{if(e.type==='log'||e.type==='focus')evs.push({id:e.id,src:'ent',type:e.type,title:e.text||'',date:e.date,start:e.time||'',end:e.endTime||'',allDay:!e.time,note:''});if(e.type==='food')evs.push({id:e.id,src:'ent',type:'food',title:(e.meal||'饮食')+': '+e.text,date:e.date,start:e.time||'',end:'',allDay:!e.time,note:''});if(e.type==='exercise')evs.push({id:e.id,src:'ent',type:'exercise',title:e.text+(e.dur?' '+e.dur+'min':''),date:e.date,start:e.time||'',end:'',allDay:!e.time,note:''}); });return evs;}
+function setCalView(v){calView=v;['day','week','month'].forEach(x=>document.getElementById('vt-'+x).classList.toggle('active',x===v));document.getElementById('week-strip').style.display=v==='month'?'none':'flex';renderCalendar();}
+function calJumpToday(){calDate=new Date();renderCalendar();}
+function calShift(d){if(calView==='day')calDate=addD(calDate,d);else if(calView==='week')calDate=addD(calDate,d*7);else calDate=new Date(calDate.getFullYear(),calDate.getMonth()+d,1);renderCalendar();}
+function calSelDay(ds){calDate=new Date(ds+' 00:00');if(calView==='month')renderCalendar();else{calView='day';setCalView('day');}}
+function renderCalendar(){updCalHdr();rWeekStrip();const c=document.getElementById('cal-content');if(calView==='day')rDayView(c);else if(calView==='week')rWeekView(c);else rMonthView(c);}
+function updCalHdr(){const el=document.getElementById('cal-hdr-title');if(calView==='day')el.textContent=calDate.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});else if(calView==='week'){const ws=wkStart(calDate),we=addD(ws,6);el.textContent=`${ws.getMonth()+1}/${ws.getDate()} — ${we.getMonth()+1}/${we.getDate()}`;}else el.textContent=calDate.toLocaleDateString('zh-CN',{year:'numeric',month:'long'});}
+function rWeekStrip(){const ws=wkStart(calDate),ts=TODAY(),allEvs=getAllCalEvs();const dows=['日','一','二','三','四','五','六'];let html='';for(let i=0;i<7;i++){const d=addD(ws,i),ds=dStr(d);const isT=ds===ts,isSel=ds===dStr(calDate),hasEv=allEvs.some(e=>e.date===ds);html+=`<div class="ws-day${isT?' today':''}${isSel?' active':''}${hasEv?' has-ev':''}" onclick="calSelDay('${ds}')"><div class="ws-dow">${dows[d.getDay()]}</div><div class="ws-num">${d.getDate()}</div><div class="ws-dot"></div></div>`;}document.getElementById('ws-days').innerHTML=html;}
+function rDayView(c){const ds=dStr(calDate),ts=TODAY();const allEvs=getAllCalEvs().filter(e=>e.date===ds);const allDay=allEvs.filter(e=>e.allDay);const timed=allEvs.filter(e=>!e.allDay&&e.start);const HOURS=Array.from({length:24},(_,i)=>i);const nowMin=new Date().getHours()*60+new Date().getMinutes();const isToday=ds===ts;c.innerHTML=`<div class="day-view"><div class="all-day-bar"><div class="all-day-lbl">全天</div><div class="all-day-chips">${allDay.length?allDay.map(e=>`<div class="ad-chip" style="background:${TC[e.type]?.bg||'#EFF6FF'};color:${TC[e.type]?.c||'#3B82F6'}" onclick="openEvModal(${e.id},'${e.src}')">${esc(e.title)}</div>`).join(''):`<span style="font-size:12px;color:var(--t3);padding:3px 0">无全天事项</span>`}<button style="font-size:12px;color:var(--ac);padding:3px 8px;flex-shrink:0" onclick="openEvModal(null,null)">+ 添加</button></div></div><div class="tl-scroll" id="cal-scroll"><div class="tl-body"><div class="t-col">${HOURS.map(h=>`<div class="t-slot">${h===0?'':pad(h)+':00'}</div>`).join('')}</div><div class="ev-col" id="ev-col">${HOURS.map(h=>`<div class="hr-row" onclick="openEvModal(null,null);document.getElementById('ev-start').value='${pad(h)}:00';document.getElementById('ev-allday').value='0';togEvTime()"><div class="half-mark"></div></div>`).join('')}${isToday?`<div class="now-line" style="top:${(nowMin/1440*100).toFixed(2)}%"><div class="now-dot"></div><div class="now-bar"></div></div>`:''}</div></div></div></div>`;requestAnimationFrame(()=>{const col=document.getElementById('ev-col');if(!col)return;timed.forEach(e=>{const[sh,sm]=(e.start||'00:00').split(':').map(Number);let[eh,em]=e.end?(e.end.split(':').map(Number)):[sh+1,sm];if(eh<=sh)eh=sh+1;const startMin=sh*60+sm,endMin=eh*60+em,dur=Math.max(endMin-startMin,30);const tc=TC[e.type]||TC.log;const el2=document.createElement('div');el2.className='ev-block';el2.style.cssText=`top:${(startMin/1440*100).toFixed(2)}%;height:${(dur/1440*100).toFixed(2)}%;background:${tc.bg};color:${tc.c};border-left-color:${tc.c}`;el2.innerHTML=`<div class="ev-t">${esc(e.title)}</div><div class="ev-tl">${e.start}${e.end?' – '+e.end:''}</div>`;el2.onclick=ev=>{ev.stopPropagation();openEvModal(e.id,e.src);};col.appendChild(el2);});const scroll=document.getElementById('cal-scroll');if(scroll){const target=isToday?Math.max(0,(nowMin-60)/1440*col.scrollHeight):7/24*col.scrollHeight;scroll.scrollTop=target;}});}
+function rWeekView(c){const ws=wkStart(calDate),ts=TODAY();const days=Array.from({length:7},(_,i)=>addD(ws,i));const allEvs=getAllCalEvs();const dows=['日','一','二','三','四','五','六'];const HOURS=Array.from({length:17},(_,i)=>i+6);const dayHdr=days.map(d=>{const ds=dStr(d);const isT=ds===ts;return`<div class="wk-dh${isT?' today':''}" onclick="calSelDay('${ds}')"><div class="wk-dow">${dows[d.getDay()]}</div><div class="wk-dnum">${d.getDate()}</div></div>`;}).join('');const dayCols=days.map(d=>{const ds=dStr(d);return`<div class="wk-col" id="wkc-${ds}">${HOURS.map(()=>`<div class="wk-hour"></div>`).join('')}</div>`;}).join('');c.innerHTML=`<div class="wk-view"><div class="wk-hdr"><div class="wk-tc"></div><div class="wk-dcols">${dayHdr}</div></div><div class="wk-body"><div class="wk-tc2">${HOURS.map(h=>`<div class="wk-tlbl">${pad(h)}:00</div>`).join('')}</div><div class="wk-cols" id="wk-cols">${dayCols}</div></div></div>`;requestAnimationFrame(()=>{const rowH=48;allEvs.filter(e=>days.some(d=>dStr(d)===e.date)&&!e.allDay&&e.start).forEach(e=>{const col=document.getElementById('wkc-'+e.date);if(!col)return;const[sh,sm]=(e.start||'00:00').split(':').map(Number);const[eh,em]=e.end?(e.end.split(':').map(Number)):[sh+1,sm];const startRow=sh-6+(sm/60),durRow=Math.max((eh*60+em-(sh*60+sm))/60,.3);const tc=TC[e.type]||TC.log;const el2=document.createElement('div');el2.className='wk-ev';el2.style.cssText=`top:${startRow*rowH}px;height:${Math.max(durRow*rowH,14)}px;background:${tc.bg};color:${tc.c};border-left-color:${tc.c}`;el2.textContent=e.title;el2.onclick=()=>openEvModal(e.id,e.src);col.appendChild(el2);});});}
+function rMonthView(c){const y=calDate.getFullYear(),m=calDate.getMonth();const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),ts=TODAY();const allEvs=getAllCalEvs();const dows=['日','一','二','三','四','五','六'];const selDs=dStr(calDate);let cells='';for(let i=0;i<first;i++)cells+=`<div class="mg-cell oth"><div class="mg-num">${new Date(y,m,0).getDate()-first+i+1}</div></div>`;for(let d=1;d<=days;d++){const ds=`${y}-${pad(m+1)}-${pad(d)}`;const isT=ds===ts,isSel=ds===selDs;const evs=allEvs.filter(e=>e.date===ds);cells+=`<div class="mg-cell${isT?' today':''}${isSel?' sel':''}" onclick="calSelDay('${ds}')"><div class="mg-num">${d}</div>${evs.length?`<div class="mg-dots">${evs.slice(0,3).map(e=>`<div class="mg-dot" style="background:${TC[e.type]?.c||'#3B82F6'}"></div>`).join('')}</div>`:''}</div>`;}const selEvs=allEvs.filter(e=>e.date===selDs).sort((a,b)=>(a.start||'00:00')<=(b.start||'00:00')?-1:1);const detail=selEvs.length?`<div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${selDs}</div>`+selEvs.map(e=>{const tc=TC[e.type]||TC.log;return`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-l);margin-bottom:6px;border-left:3px solid ${tc.c};cursor:pointer" onclick="openEvModal(${e.id},'${e.src}')"><div style="flex:1"><div style="font-size:13px;font-weight:500">${esc(e.title)}</div>${e.start?`<div style="font-size:11px;color:var(--t3);margin-top:2px">${e.start}${e.end?' – '+e.end:''}</div>`:''}</div><i class="ti ti-pencil" style="font-size:13px;color:var(--t3)"></i></div>`;}).join(''):`<div style="text-align:center;padding:12px 0;color:var(--t3);font-size:12px">这天暂无记录</div>`;c.innerHTML=`<div class="month-view"><div class="month-wh">${dows.map(d=>`<div class="mwh">${d}</div>`).join('')}</div><div class="month-grid">${cells}</div><div style="margin-top:12px">${detail}</div></div>`;}
+/* Timer */
+function setMode(m){if(tRun)return;tMode=m;['pomo','short','long','free'].forEach(x=>document.getElementById('mt-'+x).classList.toggle('active',x===m));tSec=MODES[m];tOrig=MODES[m];updTimer();document.getElementById('t-lbl').textContent=MODE_LBL[m];document.getElementById('t-status').textContent='点击开始专注';document.getElementById('t-status').classList.remove('act');}
+function toggleTimer(){if(tRun){clearInterval(tInt);tRun=false;setPlayIc(false);document.getElementById('play-btn').classList.add('paused');document.getElementById('t-status').textContent='已暂停';document.getElementById('t-status').classList.remove('act');if(tMode==='free'&&tSec>0)commitSess(Math.floor(tSec/60));if(curPage==='home')renderBanner();}else{tRun=true;setPlayIc(true);document.getElementById('play-btn').classList.remove('paused');const lbl={pomo:'🍅 专注中…',short:'休息中…',long:'长休息中…',free:'计时中…'};document.getElementById('t-status').textContent=lbl[tMode];document.getElementById('t-status').classList.add('act');if(tMode==='free'){tSec=0;tInt=setInterval(()=>{tSec++;updTimer();if(curPage==='home')renderBanner();},1000);}else{tInt=setInterval(()=>{if(tSec<=0){clearInterval(tInt);tRun=false;onTDone();return;}tSec--;updTimer();if(curPage==='home')renderBanner();},1000);}}}
+function onTDone(){setPlayIc(false);document.getElementById('play-btn').classList.remove('paused');document.getElementById('t-status').textContent=tMode==='pomo'?'🍅 完成！':'休息结束！';document.getElementById('t-status').classList.remove('act');if(tMode==='pomo')commitSess(25);tSec=tOrig;setTimeout(()=>updTimer(),500);if(curPage==='home')renderBanner();}
+function resetTimer(){clearInterval(tInt);tRun=false;tSec=tOrig;updTimer();setPlayIc(false);document.getElementById('play-btn').classList.remove('paused');document.getElementById('t-status').textContent='点击开始专注';document.getElementById('t-status').classList.remove('act');if(curPage==='home')renderBanner();}
+function skipTimer(){clearInterval(tInt);tRun=false;onTDone();}
+function updTimer(){const m=Math.floor(tSec/60),s=tSec%60;document.getElementById('t-num').textContent=pad(m)+':'+pad(s);const ring=document.getElementById('ring');if(tMode==='free'){const f=Math.min(tSec/3600,1);ring.style.strokeDashoffset=CIRC*(1-f);ring.style.stroke='var(--tl)';}else{ring.style.strokeDashoffset=CIRC*(1-tSec/Math.max(tOrig,1));ring.style.stroke=(tMode==='short'||tMode==='long')?'var(--gn)':'var(--ac)';}const fill=document.getElementById('prog-fill');const pe=document.getElementById('pb-e');const pt=document.getElementById('pb-t');if(fill&&pe&&pt){let pct=0,em=0,tm=0;if(tMode==='free'){pct=Math.min(tSec/3600*100,100);em=Math.floor(tSec/60);tm=60;}else{pct=(1-tSec/Math.max(tOrig,1))*100;em=Math.floor((tOrig-tSec)/60);tm=Math.floor(tOrig/60);}fill.style.width=pct+'%';fill.style.background=(tMode==='short'||tMode==='long')?'var(--gn)':(tMode==='free'?'var(--tl)':'var(--ac)');pe.textContent=em+' min';pt.textContent=tm+' min';}}
+function setPlayIc(p){document.getElementById('play-ic').className=p?'ti ti-player-pause':'ti ti-player-play';}
+function commitSess(minutes){if(minutes<1)return;const task=document.getElementById('task-inp').value.trim()||'专注';const st=document.getElementById('fstart').value||ntime();const[sh,sm]=st.split(':').map(Number);const em=(sh*60+sm+minutes)%1440;const et=pad(Math.floor(em/60))+':'+pad(em%60);D.ents.unshift({id:Date.now(),type:'log',text:`${st}–${et} ${task} ${minutes}min`,date:TODAY(),time:st});D.ents.push({id:Date.now()+1,type:'focus',text:task,date:TODAY(),time:st,endTime:et,min:minutes});D.focusSessions.push({id:Date.now()+2,date:TODAY(),task,minutes,startT:st,endT:et,isPomo:tMode==='pomo'});document.getElementById('fstart').value=et;saveD();renderPomoRow();renderSessions();}
+function renderPomoRow(){const t=TODAY(),ss=D.focusSessions.filter(s=>s.date===t);const pc=ss.filter(s=>s.isPomo&&s.minutes>=20).length,tm=ss.reduce((a,s)=>a+s.minutes,0);document.getElementById('pomo-lbl').textContent=`${pc} 个番茄 · 共 ${tm} 分钟`;document.getElementById('pomo-row').innerHTML=Array.from({length:Math.max(4,pc+1)},(_,i)=>`<span class="pomo-t${i>=pc?' dim':''}">🍅</span>`).join('');}
+function renderSessions(){const t=TODAY(),ss=[...D.focusSessions.filter(s=>s.date===t)].reverse();const el=document.getElementById('sess-list');if(!ss.length){el.innerHTML=`<div class="empty-state" style="padding:16px 0"><i class="ti ti-clock-off"></i><div class="es-sub">今日还没有专注记录</div></div>`;return;}el.innerHTML=ss.map(s=>`<div class="sess-item"><div class="sess-dot" style="background:${s.isPomo?'var(--ac)':'var(--tl)'}"></div><div style="flex:1"><div class="sess-task">${esc(s.task)}</div><div class="sess-range">${s.startT}–${s.endT}</div></div><div class="sess-min">${s.minutes} min</div></div>`).join('');}
+/* Stats */
+function setPeriod(p){statPeriod=p;['day','week','month','custom'].forEach(x=>document.getElementById('pt-'+x).classList.toggle('active',x===p));document.getElementById('custom-row').classList.toggle('show',p==='custom');if(p!=='custom')renderStatsPage();}
+function getRange(){const t=new Date(),ts=TODAY();if(statPeriod==='day')return{s:ts,e:ts};if(statPeriod==='week'){const ws=new Date(t.getTime()-t.getDay()*86400000);return{s:ws.toISOString().slice(0,10),e:new Date(ws.getTime()+6*86400000).toISOString().slice(0,10)};}if(statPeriod==='month')return{s:`${t.getFullYear()}-${pad(t.getMonth()+1)}-01`,e:ts};return{s:document.getElementById('ds').value||ts,e:document.getElementById('de').value||ts};}
+function daysInRange(s,e){const ds=[],st=new Date(s+' 00:00'),en=new Date(e+' 00:00');while(st<=en){ds.push(st.toISOString().slice(0,10));st.setDate(st.getDate()+1);}return ds;}
+function renderStatsPage(){const{s,e}=getRange();const days=daysInRange(s,e);const tF=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='focus').reduce((b,x)=>b+(x.min||0),0),0);const tD=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='log').length+D.scheds.filter(x=>x.date===d&&x.done).length,0);const tM=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='food').length,0);const tE=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='exercise').reduce((b,x)=>b+(parseInt(x.dur)||0),0),0);[['su-f',tF],['su-d',tD],['su-m',tM],['su-e',tE]].forEach(([id,v])=>document.getElementById(id).textContent=v);document.getElementById('st-desc').textContent=s===e?s:s+' → '+e;const pL={day:'今日',week:'本周',month:'本月',custom:'自定义'}[statPeriod];document.getElementById('sc-p').textContent=pL;document.getElementById('sc-grid').innerHTML=`<div class="sc-item"><div class="sc-n">${tF}</div><div class="sc-l">专注分钟</div></div><div class="sc-item"><div class="sc-n">${tD}</div><div class="sc-l">完成事项</div></div><div class="sc-item"><div class="sc-n">${tM}</div><div class="sc-l">饮食记录</div></div><div class="sc-item"><div class="sc-n">${tE}</div><div class="sc-l">运动分钟</div></div>`;const rec=[...D.ents.filter(x=>days.includes(x.date)&&x.type==='log'),...D.scheds.filter(x=>days.includes(x.date)&&x.done)].sort((a,b)=>((b.date||'')+(b.time||''))<((a.date||'')+(a.time||''))?1:-1).slice(0,4);document.getElementById('sc-recent').innerHTML=rec.length?`<div class="sc-rt">最近完成</div>${rec.map(i=>`<div class="sc-ri"><div class="sc-rd"></div><span>${esc(i.text||i.title||'')}</span></div>`).join('')}`:'';const cd=days.slice(-7);rBars('fc',cd,d=>D.ents.filter(x=>x.date===d&&x.type==='focus').reduce((a,x)=>a+(x.min||0),0),'#3B82F6');rBars('ec',cd,d=>D.ents.filter(x=>x.date===d&&x.type==='exercise').reduce((a,x)=>a+(parseInt(x.dur)||0),0),'#0F766E');document.getElementById('fc-lbl').textContent=`共 ${tF} 分钟`;document.getElementById('ec-lbl').textContent=`共 ${tE} 分钟`;rHeatmap();rAllItems(days);}
+function rBars(id,days,vFn,color){const vals=days.map(d=>vFn(d)),maxV=Math.max(...vals,1);const el=document.getElementById(id);if(vals.every(v=>v===0)){el.innerHTML=`<div class="empty-state" style="padding:12px 0"><i class="ti ti-chart-bar"></i><div class="es-sub">暂无数据</div></div>`;return;}el.innerHTML=days.map((d,i)=>{const v=vals[i],pct=Math.round(v/maxV*100),lbl=d.slice(5).replace('-','/');return`<div class="bc-row"><div class="bc-lbl">${lbl}</div><div class="bc-track"><div class="bc-fill" style="width:${pct}%;background:${color}">${pct>22&&v>0?`<span class="bc-val">${v}</span>`:''}</div>${pct<=22&&v>0?`<span class="bc-val-out" style="color:${color}">${v}</span>`:''}</div></div>`;}).join('');}
+function rHeatmap(){const now=new Date();let html='';for(let i=27;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);const c=D.ents.filter(x=>x.date===ds).length+D.scheds.filter(x=>x.date===ds&&x.done).length;const lv=c===0?'':c<=1?'l1':c<=3?'l2':c<=6?'l3':'l4';html+=`<div class="hm-c ${lv}" title="${ds}: ${c}"></div>`;}document.getElementById('heatmap').innerHTML=html;}
+function rAllItems(days){const all=[...D.ents.filter(x=>days.includes(x.date)),...D.scheds.filter(x=>days.includes(x.date))].sort((a,b)=>((b.date||'')+(b.time||''))<((a.date||'')+(a.time||''))?1:-1).slice(0,40);document.getElementById('ai-lbl').textContent=`共 ${all.length} 条`;const el=document.getElementById('all-items');if(!all.length){el.innerHTML=`<div class="empty-state" style="padding:16px 0"><i class="ti ti-list"></i><div class="es-sub">暂无数据</div></div>`;return;}el.innerHTML=all.map(item=>{const tc=TC[item.type]||TC.log;return`<div class="all-item"><div class="ai-dot" style="background:${tc.c}"></div><div class="ai-text">${esc(item.text||item.title||'')}</div><span class="ai-badge" style="background:${tc.bg};color:${tc.c}">${tc.l}</span><span class="ai-date">${item.date||''}</span></div>`;}).join('');}
+/* Share image via Canvas */
+async function generateShareImage(){const{s,e}=getRange();const days=daysInRange(s,e);const tF=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='focus').reduce((b,x)=>b+(x.min||0),0),0);const tD=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='log').length+D.scheds.filter(x=>x.date===d&&x.done).length,0);const tM=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='food').length,0);const tE=days.reduce((a,d)=>a+D.ents.filter(x=>x.date===d&&x.type==='exercise').reduce((b,x)=>b+(parseInt(x.dur)||0),0),0);const pL={day:'今日',week:'本周',month:'本月',custom:'自定义'}[statPeriod];const rec=[...D.ents.filter(x=>days.includes(x.date)&&x.type==='log'),...D.scheds.filter(x=>days.includes(x.date)&&x.done)].sort((a,b)=>((b.date||'')+(b.time||''))<((a.date||'')+(a.time||''))?1:-1).slice(0,4);const W=480,H=420+rec.length*30;const cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;const ctx=cv.getContext('2d');ctx.scale(2,2);const grd=ctx.createLinearGradient(0,0,W,H);grd.addColorStop(0,'#1E3A8A');grd.addColorStop(.55,'#2563EB');grd.addColorStop(1,'#60A5FA');ctx.fillStyle=grd;rRect(ctx,0,0,W,H,20);ctx.fill();ctx.fillStyle='rgba(255,255,255,0.06)';ctx.beginPath();ctx.arc(W-60,60,110,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='500 11px system-ui';ctx.fillText(pL.toUpperCase(),22,38);ctx.fillStyle='#fff';ctx.font='700 20px system-ui';ctx.fillText('完成统计 ✦',22,64);ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='400 12px system-ui';ctx.fillText(s===e?s:s+' → '+e,22,86);const stats=[{n:tF,l:'专注分钟'},{n:tD,l:'完成事项'},{n:tM,l:'饮食记录'},{n:tE,l:'运动分钟'}];const bw=(W-44-18)/2,bh=80;stats.forEach((st,i)=>{const x=22+(i%2)*(bw+9),y=106+Math.floor(i/2)*(bh+9);ctx.fillStyle='rgba(255,255,255,0.12)';rRect(ctx,x,y,bw,bh,12);ctx.fill();ctx.fillStyle='#fff';ctx.font='700 28px system-ui';ctx.fillText(String(st.n),x+14,y+40);ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='400 11px system-ui';ctx.fillText(st.l,x+14,y+60);});const divY=106+2*(bh+9)+14;ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(22,divY);ctx.lineTo(W-22,divY);ctx.stroke();if(rec.length){ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='600 10px system-ui';ctx.fillText('最近完成',22,divY+18);rec.forEach((item,i)=>{const y2=divY+36+i*28;ctx.fillStyle='rgba(255,255,255,0.55)';ctx.beginPath();ctx.arc(28,y2-3,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,0.88)';ctx.font='400 13px system-ui';ctx.fillText((item.text||item.title||'').slice(0,30),38,y2);});}ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='400 11px system-ui';ctx.fillText('我的日常 App',22,H-14);const link=document.createElement('a');link.download=`daily-stats-${TODAY()}.png`;link.href=cv.toDataURL('image/png');link.click();}
+function rRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function exportData(){const json=JSON.stringify(D,null,2);const blob=new Blob([json],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`daily-backup-${TODAY()}.json`;a.click();URL.revokeObjectURL(url);}
+function importData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const parsed=JSON.parse(ev.target.result);if(parsed.ents||parsed.scheds){if(confirm('确定用备份数据覆盖当前所有数据？')){D={ents:[],scheds:[],focusSessions:[],...parsed};saveD();updateAll();alert('数据恢复成功 ✓');}}else alert('文件格式不正确');}catch{alert('解析失败');}};reader.readAsText(file);input.value='';}
+/* Navigation */
+function goPage(name){curPage=name;PAGES.forEach(p=>document.getElementById('pg-'+p).classList.remove('active'));document.getElementById('pg-'+name).classList.add('active');document.querySelectorAll('.sb-item').forEach((s,i)=>s.classList.toggle('active',PAGES[i]===name));document.querySelectorAll('.bn-item').forEach((b,i)=>b.classList.toggle('active',PAGES[i]===name));document.getElementById('input-bar').style.display=name==='home'?'block':'none';document.getElementById('ms').scrollTop=0;updateAll();}
+/* Swipe to change page */
+let swX=0,swY=0,swT=0;
+document.addEventListener('touchstart',e=>{swX=e.touches[0].clientX;swY=e.touches[0].clientY;swT=Date.now();},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-swX;const dy=e.changedTouches[0].clientY-swY;const dt=Date.now()-swT;if(dt>280||Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;if(curPage==='cal'){calShift(dx<0?1:-1);return;}const idx=PAGES.indexOf(curPage);if(dx<0&&idx<PAGES.length-1)goPage(PAGES[idx+1]);else if(dx>0&&idx>0)goPage(PAGES[idx-1]);},{passive:true});
+/* Boot */
+updTimer();init();
+</script>
+</body>
+</html>
